@@ -1,0 +1,189 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+  background-color: #f7f7f7;
+}
+
+table {
+    font-size: 20px
+}
+
+#forExitButton {
+  width: 80%;
+  position: relative;
+  margin: 0 auto;
+  display: block;
+
+}
+
+#joinButton {
+  background-color: #810000;
+  color: #C5985D;
+  display: block;
+  height: 50px;
+  width: 100%;
+  font-size: 20px;
+  border-radius: 5px;
+  -webkit-appearance: none;
+  font-weight: bold;
+}
+
+#leaveButton{
+  display: inline-block;
+  text-decoration: none;
+  background: #810000;
+  color: #C5985D;
+  font-size: 40px;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  border-radius: 50%;
+  text-align: center;
+  overflow: hidden;
+  transition: .4s;
+  margin-left: 100%;
+  position: absolute;
+  top: 5px;
+  right: -18px;
+}
+
+#leaveButton:hover{
+    background: #8B0000;
+}
+
+#loginPage {
+  background: url(wreath.png);
+  height: 100vh;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 50% 170px;
+  background-size: 50%;
+}
+
+.loginPageH1 {
+  font-size: 45px;
+  font-family: "Impact";
+  color: #B78358;
+  background-color: #810000;
+  margin-top: 0;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+#messageArea {
+  background-image: url(background.jpg);
+  border-radius: 5px;
+  font-family: "Helvetica Neue";
+  width: 100%;
+}
+
+#sendButton {
+  background-color: #810000;
+  border-radius: 5px;
+  color: #C5985D;
+  display: inline;
+  font-weight: bold;
+  font-size: 20px;
+  max-height: 45px;
+  text-align: center;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  -webkit-appearance: none;
+  width: 100px;
+}
+
+#textArea {
+  border-radius: 5px;
+  display: inline;
+  float: left;
+  font-size: 20px;
+  padding: 5px 15px;
+  margin-bottom: 20px;
+  resize: none;
+  width: calc(100% - 140px);
+  height: 30px;
+}
+
+#textAreaAndSend {
+  width: 100%;
+  box-sizing:border-box;
+}
+
+#entireChatDiv {
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+
+}
+
+#userForm {
+  width: 23%;
+  margin: 0 auto;
+  margin-top: 15%;
+}
+
+#welcomeToRoom {
+  text-align: center;
+  font-family: "Impact";
+  font-size: 40px;
+}
+
+.inputForm {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 20px;
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.userData {
+  color: #680302;
+}
+
+td {
+  /* padding-top: 6px; */
+  padding-left: 10px;
+  /* padding-bottom: 6px; */
+  padding-right: 10px;
+  word-wrap:break-word;
+}
+
+.elseMessage {
+    background-color: #FFFFFF;
+    border-collapse: collapse;
+    border-radius: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    min-width: 100px;
+    max-width: 70%;
+    margin-left: 2%;
+    table-layout: fixed;
+}
+
+.myMessage {
+  background-color: #DCF8C7;
+  border-collapse: collapse;
+  border-radius: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  min-width: 150px;
+  margin-right: 2%;
+  margin-left: auto;
+  max-width: 70%;
+}
+
+.timeRow {
+  font-size: 10px;
+  text-align: right;
+}

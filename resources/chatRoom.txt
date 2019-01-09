@@ -1,0 +1,18 @@
+<h1 class="loginPageH1" id="welcomeToRoom"> </h1>
+<div id="forExitButton">
+  <br>
+  <br>
+  <a href="#" id="leaveButton">&times;</a>
+  <div id="entireChatDiv">
+
+    <div id="messageArea" style="overflow:scroll; height:520px;">
+        <p id="messageTable">
+        </p>
+    </div>
+
+    <div id="textAreaAndSend">
+      <input id="textArea" type="text" autocomplete="off"> </input>
+      <button id="sendButton" type="submit">SEND</button>
+    </div>
+  </div>
+</div>

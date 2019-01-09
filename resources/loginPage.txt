@@ -1,0 +1,13 @@
+<div id="loginPage" height="100%">
+    <h1 class="loginPageH1" align="center">Jason's Chat Room Extravaganza!</h1>
+  <div id="userForm">
+    <input name="chatRoom" class="inputForm" type="text"
+     placeholder="chatroom"> </input>
+    <br>
+    <input name="username" class="inputForm" type="text"
+     placeholder="username"> </input>
+    <br>
+    <input id="joinButton" type="submit" value="JOIN"></input>
+    <p id="emptyMessage"> </p>
+  </div>
+</div>
