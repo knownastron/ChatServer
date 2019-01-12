@@ -143,7 +143,6 @@ function webSocketHandling() {
     timeData.appendChild(document.createTextNode(returnTime));
     timeRow.appendChild(timeData);
 
-
     theMessage.appendChild(userRow);
     theMessage.appendChild(messageRow);
     theMessage.appendChild(timeRow);

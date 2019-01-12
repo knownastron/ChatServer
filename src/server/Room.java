@@ -84,7 +84,8 @@ public class Room {
 			try {
 				String message = ConnectedWebSocket.decodeMessage(clientSocket);
 				System.out.println("MESSAGE RECEIVED! " + message);
-				MessagePost newMessagePost = MessagePost.createMessagePost(message, messageLog);
+				MessagePost newMessagePost = MessagePost.createMessagePost(message);
+				MessagePost.addMessagePostToLog(newMessagePost, messageLog);
 				clientSocket.configureBlocking(false);
 				sel.selectNow();
 				clientSocket.register(sel, SelectionKey.OP_READ);

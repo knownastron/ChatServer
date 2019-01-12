@@ -17,7 +17,7 @@ import java.util.*;
 
 public class ConnectedWebSocket {
 	/**
-	 * Decodes a WebSocket header and returns message
+	 * Decodes a WebSocket header and returns message in String format
 	 *
 	 * @param clientSocket the client socket
 	 * @return the decoded message

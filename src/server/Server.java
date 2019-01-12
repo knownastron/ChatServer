@@ -4,7 +4,12 @@ import java.nio.channels.*;
 import java.util.*;
 import java.io.*;
 
-
+/**
+ * Server.java - class representing the main server
+ * 
+ * @author knownastron
+ *
+ */
 public class Server {
 
 	private ServerSocketChannel server = null;
@@ -57,7 +62,6 @@ public class Server {
 		muhServer.run();
 	}
 	
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Listens to client connection on server

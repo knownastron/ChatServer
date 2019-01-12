@@ -70,12 +70,13 @@ public class MessagePost {
 	
 	/**
 	 * Creates a MessagePost from the incomingMessage, adds the new MessagePost to the messageLog
+	 * 
 	 * @param message
 	 * @param messageLog
 	 * @return
 	 * @throws Exception
 	 */
-	public static MessagePost createMessagePost(String incomingMessage, ArrayList<MessagePost> messageLog) throws Exception {
+	public static MessagePost createMessagePost(String incomingMessage) throws Exception {
 		String outputUsername, outputMessage;
 		Gson gson = new Gson();
 		
@@ -95,7 +96,16 @@ public class MessagePost {
 		String outputTime = hour + ":" + minute;
 
 		MessagePost messagePost = new MessagePost("post", outputUsername, outputMessage, outputTime);
-		messageLog.add(messagePost);
 		return messagePost;
+	}
+	
+	/**
+	 * Adds a MessagePost to the ArrayList
+	 * 
+	 * @param messagePostToAdd MessagePost to add to the messageLog
+	 * @param messageLog ArrayList to add the MessagePost to
+	 */
+	public static void addMessagePostToLog(MessagePost messagePostToAdd, ArrayList<MessagePost> messageLog) {
+		messageLog.add(messagePostToAdd);
 	}
 }
