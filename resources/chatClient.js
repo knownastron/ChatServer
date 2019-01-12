@@ -74,7 +74,7 @@ function joinButtonHandling() {
   emptyInput = document.getElementById("emptyMessage");
   joinButton.onclick = function() {
       // get username and chatroom
-      username = document.getElementsByName("username")[0].value.toLowerCase();
+      username = document.getElementsByName("username")[0].value;
       chatRoom = document.getElementsByName("chatRoom")[0].value;
       emptyInput.innerHTML = '';
       if (chatRoom === "") {

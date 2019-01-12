@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import com.google.gson.Gson;
 
+/**
+ * MessagePost.java - a class that represents a message sent to/from a client
+ * 
+ * @author knownastron
+ *
+ */
+
 public class MessagePost {
 	private String command, username, message, time;
 	
@@ -21,32 +28,59 @@ public class MessagePost {
 		this.time = time;
 	}
 	
+	/**
+	 * @return the value of the MessagePost
+	 */
 	public String getCommand() {
 		return this.command;
 	}
+	
+	/**
+	 * @return the username of the MessagePost
+	 */
 	public String getUsername() {
 		return this.username;
 	}
 	
+	/**
+	 * @return the message of the MessagePost
+	 */
 	public String getMessage() {
 		return this.message;
 	}
 	
+	
+	/**
+	 * 
+	 * @return the time the MessagePost was received at the sever
+	 */
 	public String getTime() {
 		return this.time;
 	}
 	
+	/**
+	 * returns a String of the fields of the MessagePost in JSON format
+	 * 
+	 * @return JSON format of the MessagePost
+	 */
 	public String toJSON() {
 		Gson mygson = new Gson();
 		return mygson.toJson(this);
 	}
 	
-	public static MessagePost createMessagePost(String message, ArrayList<MessagePost> messageLog) throws Exception {
+	/**
+	 * Creates a MessagePost from the incomingMessage, adds the new MessagePost to the messageLog
+	 * @param message
+	 * @param messageLog
+	 * @return
+	 * @throws Exception
+	 */
+	public static MessagePost createMessagePost(String incomingMessage, ArrayList<MessagePost> messageLog) throws Exception {
 		String outputUsername, outputMessage;
 		Gson gson = new Gson();
 		
 		try {
-			MessagePost newMessagePost = gson.fromJson(message, MessagePost.class);
+			MessagePost newMessagePost = gson.fromJson(incomingMessage, MessagePost.class);
 			outputUsername = newMessagePost.getUsername();
 			outputMessage = newMessagePost.getMessage();
 		} catch (Exception e) { // this error happens when a client leaves
@@ -60,7 +94,6 @@ public class MessagePost {
 		}
 		String outputTime = hour + ":" + minute;
 
-		
 		MessagePost messagePost = new MessagePost("post", outputUsername, outputMessage, outputTime);
 		messageLog.add(messagePost);
 		return messagePost;

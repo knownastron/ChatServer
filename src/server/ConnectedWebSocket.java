@@ -7,9 +7,17 @@ import java.net.*;
 import java.nio.channels.*;
 import java.util.*;
 
+/**
+ * This class represents a connected WebSocket with associated methods that a connected
+ * WebSocket would need
+ * 
+ * @author knownastron
+ *
+ */
+
 public class ConnectedWebSocket {
 	/**
-	 * Decodes a message from the web socket
+	 * Decodes a WebSocket header and returns message
 	 *
 	 * @param clientSocket the client socket
 	 * @return the decoded message
@@ -61,7 +69,8 @@ public class ConnectedWebSocket {
 	}
 
 	/**
-	 * Converts a message post into JSON format and ends it through the web socket
+	 * Converts a message post into JSON format and sends it through the web socket
+	 * 
 	 * @param clientSocket
 	 * @param messagePost
 	 * @throws IOException
@@ -72,7 +81,8 @@ public class ConnectedWebSocket {
 	}
 
 	/**
-	 * Encodes the message and sends it through the connected websocket
+	 * Encodes the message into a WebSocket header and sends it through the connected websocket
+	 * 
 	 * @param clientSocket
 	 * @param message
 	 * @throws IOException

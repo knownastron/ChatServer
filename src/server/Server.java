@@ -4,6 +4,7 @@ import java.nio.channels.*;
 import java.util.*;
 import java.io.*;
 
+
 public class Server {
 
 	private ServerSocketChannel server = null;
@@ -18,20 +19,21 @@ public class Server {
 		this.chatRooms = new HashMap<>();
 	}
 	
+	/**
+	 * runs the server by creating a socket and listening for client requests
+	 * returns HTTP GET requests or initializes handshake when header contains Sec-WebSocket-Key
+	 */
 	public void run()  {
-		
 		try {
 			while (true) {
 				SocketChannel clientSocket = acceptClient(server);
 				new Thread(()-> {
-					HashMap<String, String> headerMap = new HashMap<>();
 					try {
-						parseHeader(headerMap, clientSocket);
+						HashMap<String, String> headerMap = HTTPrequest.parseHeader(clientSocket);
 						
 						if (headerMap.containsKey("Sec-WebSocket-Key")) {
 							// Handshakes with client and opens WebSocket
 							HTTPresponse.handleHandshakeResponse(clientSocket, headerMap.get("Sec-WebSocket-Key"));
-							System.out.println("About to enter Join room");
 							Room.joinRoom(clientSocket, chatRooms);
 
 						} else if (headerMap.containsKey("GET")) {
@@ -57,43 +59,17 @@ public class Server {
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Listens to client connection on server
+	 * 
+	 * @param server a ServerSocketChannel to listen for client
+	 * @return
+	 * @throws IOException
+	 */
 	private SocketChannel acceptClient(ServerSocketChannel server) throws IOException {
 		System.out.println("Server listening on port " + port);
 		SocketChannel socket = server.accept();
 		System.out.println("Client connected!");
 		return socket;
 	}
-	
-	private void sendBadOutput(Socket socket) {
-		try {
-			StringBuilder response = new StringBuilder();
-			OutputStream out = socket.getOutputStream();
-			response.append("400 BAD REQUEST\n\n");
-			out.write(response.toString().getBytes());
-			out.flush();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private HashMap<String, String> parseHeader(HashMap<String, String> headerMap, SocketChannel clientSocket) throws IOException {
-		Scanner in = new Scanner(clientSocket.socket().getInputStream());
-		String firstLine = in.nextLine();
-		String[] splitLine = firstLine.split(" ");	
-		headerMap.put(splitLine[0], splitLine[1]);
-		
-		String scan;
-		while ((scan = in.nextLine()) != null) {
-			if (scan.isEmpty()) {
-				break;
-			}
-			
-			splitLine = scan.split(": ");
-			headerMap.put(splitLine[0], splitLine[1]);
-		}
-		return headerMap;
-	}
-	
-
-	
 }
