@@ -29,6 +29,7 @@ public class Room {
 		this.messageLog = new ArrayList<>();
 	}
 	
+	
 	/**
 	 * Returns the name of the room
 	 * 
@@ -38,6 +39,7 @@ public class Room {
 		return this.roomName;
 	}
 
+	
 	/**
 	 * Adds a new client to the current room
 	 * @param clientSocket the client socket to connect to the room
@@ -65,6 +67,7 @@ public class Room {
 			registerSockets();
 		}
 	}
+	
 	
 	/**
 	 * Decodes messages from channels that have sent a message, then broadcasts the decoded
@@ -157,66 +160,72 @@ public class Room {
 	
 	/**
 	 * Activated when a join message is received from the socket.
-	 * WHAT IT REALLY DOES: 
-	 * 	- calls the decodeMessage function which parses a websocket packet and gets the message,
-	 * 	  which is usually in the form: {"command":"join","message":"muhroom"} 
-	 *  - takes that message and turns it into a "MessagePost" which is just easier to handle
-	 *    MessagePost allows me to handle the message as if it was JSON: ex) message.command >>> "join"
-	 *  - Sends this message post to another function that actually adds the current socket to a room
+	 * Adds the client socket to the roomName
 	 * 
 	 * @param clientSocket
 	 * @param chatRooms
 	 * @throws IOException
 	 */
-	public static void joinRoom(SocketChannel clientSocket, HashMap<String, Room> chatRooms) throws IOException {
-		String message = ConnectedWebSocket.decodeMessage(clientSocket);
-		System.out.println("JOIN ROOM MESSAGE " + message);
-		Gson gson = new Gson();
-		// turns the message into a MessagePost for easy handling
-		MessagePost inMessagePost = gson.fromJson(message, MessagePost.class); 
-		addClientToRoom(inMessagePost, clientSocket, chatRooms);
+	public static void joinRoom(SocketChannel clientSocket, String roomName, HashMap<String, Room> chatRooms) throws IOException {
+		boolean roomAlreadyExists = doesRoomExists(roomName, chatRooms); 
+		
+		if (roomAlreadyExists) {
+			addClientToExistingRoom(roomName, clientSocket, chatRooms);
+		} else {
+			addClientToNewRoom(roomName, clientSocket, chatRooms);
+		}
 	}
 	
 	
 	/**
-	 * Checks if the Room already exists
-	 * if room exists, adds client to the room
-	 * if room does not exist, creates room and adds client to room
+	 * Checks if roomName already exists in chatRooms
 	 * 
-	 * @param inMessagePost
+	 * @param roomName
+	 * @param chatRooms
+	 * @return true if roomName exists in chatRooms, false otherwise
+	 */
+	private static boolean doesRoomExists(String roomName, HashMap<String, Room> chatRooms) {
+		if (chatRooms.containsKey(roomName)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * Adds the clientSocket to the roomName in chatRooms
+	 * 
+	 * @param roomName
 	 * @param clientSocket
 	 * @param chatRooms
 	 * @throws IOException
 	 */
-	private static synchronized void addClientToRoom(MessagePost inMessagePost, SocketChannel clientSocket, HashMap<String, Room> chatRooms) throws IOException {
-		String roomToJoin = inMessagePost.getMessage();
-		boolean roomExists = false;
-		
-		// check if room exists, adds client to room if true
-		if (inMessagePost.getCommand().equals("join")) {
-			if (chatRooms.containsKey(roomToJoin)) {
-				System.out.println("joining existing room");
-				roomExists = true;
-				chatRooms.get(roomToJoin).addClient(clientSocket);
+	private static synchronized void addClientToExistingRoom(String roomName, SocketChannel clientSocket, HashMap<String, Room> chatRooms ) throws IOException {
+			System.out.println("joining existing room");
+			chatRooms.get(roomName).addClient(clientSocket);
+	}
+	
+	
+	/**
+	 * Creates a new Room and adds it to chatRooms. 
+	 * Adds client socket to this newly created room. 
+	 * 
+	 * @param roomName
+	 * @param clientSocket
+	 * @param chatRooms
+	 * @throws IOException
+	 */
+	private static synchronized void addClientToNewRoom(String roomName, SocketChannel clientSocket, HashMap<String, Room> chatRooms) throws IOException {
+		System.out.println("creating new room: " + roomName);
+		Room newRoom = new Room(roomName);
+		chatRooms.put(roomName, newRoom);
+		newRoom.addClient(clientSocket);
+		new Thread(()-> {
+			try {
+				newRoom.listen();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		
-			// if room does not exist, create room, add client, and start thread	
-			if (roomExists == false) {
-				System.out.println("creating new room: " + roomToJoin);
-				Room newRoom = new Room(roomToJoin);
-				chatRooms.put(roomToJoin, newRoom);
-				newRoom.addClient(clientSocket);
-				new Thread(()-> {
-					try {
-						newRoom.listen();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}).start();
-			}
-		} else {
-			System.out.println("command is not join");
-			clientSocket.close();
-		}
+		}).start();
 	}
 }

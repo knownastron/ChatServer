@@ -3,6 +3,7 @@ import java.net.*;
 import java.nio.channels.*;
 import java.util.*;
 import java.io.*;
+import com.google.gson.Gson;
 
 /**
  * Server.java - class representing the main server
@@ -15,6 +16,7 @@ public class Server {
 	private ServerSocketChannel server = null;
 	private int port;
 	private HashMap<String, Room> chatRooms;
+	private Gson gson = new Gson();
 	
 	
 	public Server(int port) throws IOException {
@@ -23,6 +25,7 @@ public class Server {
 		server.bind(new InetSocketAddress(this.port));
 		this.chatRooms = new HashMap<>();
 	}
+	
 	
 	/**
 	 * runs the server by creating a socket and listening for client requests
@@ -35,12 +38,22 @@ public class Server {
 				new Thread(()-> {
 					try {
 						HashMap<String, String> headerMap = HTTPrequest.parseHeader(clientSocket);
-						
+						// assumes that if "Sec-WebSocket-Key" is in the header, it is a Websocket handshake request
 						if (headerMap.containsKey("Sec-WebSocket-Key")) {
+							
 							// Handshakes with client and opens WebSocket
 							HTTPresponse.handleHandshakeResponse(clientSocket, headerMap.get("Sec-WebSocket-Key"));
-							Room.joinRoom(clientSocket, chatRooms);
-
+							String message = ConnectedWebSocket.decodeMessage(clientSocket);
+							
+							// turns the message into a MessagePost for easy handling
+							MessagePost inMessagePost = gson.fromJson(message, MessagePost.class); 
+							
+							if (inMessagePost.getCommand().equals("join")) {
+								Room.joinRoom(clientSocket, inMessagePost.getMessage(), chatRooms);
+							} else {
+								System.out.println("command is not join");
+								clientSocket.close();
+							}
 						} else if (headerMap.containsKey("GET")) {
 							// basic handling of HTTP get requests
 							String desiredFile = HTTPrequest.handleGetRequest(headerMap.get("GET"));
