@@ -10,7 +10,14 @@ import java.nio.channels.SocketChannel;
  * @author knownastron
  *
  */
-public class HTTPrequest {
+public class HTTPRequest {
+	HashMap<String, String> headerMap;
+	
+	public HTTPRequest() {
+		this.headerMap = new HashMap<String,String>();
+	
+	}
+	
 	/**
 	 * 
 	 * @param uri the URI in the HTTP request
@@ -19,7 +26,7 @@ public class HTTPrequest {
 	 */
 	public static String handleGetRequest(String uri) throws IOException{	
 		String path = "";
-		path = HTTPrequest.getFilePath(uri);
+		path = HTTPRequest.getFilePath(uri);
 		return path;
 	}
 	
@@ -39,22 +46,19 @@ public class HTTPrequest {
 		return uri;
 	}
 	
+
 	/**
-	 * Parses a HTTP request header into a map of header:value
+	 * Parses a HTTP request header into a HashMap class instance object
 	 * 
-	 * @param headerMap a map to store the map of the header to value
-	 * @param clientSocket the SocketChannel to receive HTTP header
-	 * @return the HTTP header put into a map
+	 * @param clientSocket the SocketChannel to read the HTTP header from
 	 * @throws IOException
 	 */
-	public static HashMap<String, String> parseHeader(SocketChannel clientSocket) throws IOException {
-		HashMap<String, String> headerMap = new HashMap<>();
-		
+	public void parseMessageFromSocket(SocketChannel clientSocket) throws IOException {
 		Scanner in = new Scanner(clientSocket.socket().getInputStream());
 		if (in.hasNext()) {
 			String firstLine = in.nextLine();
 			String[] splitLine = firstLine.split(" ");
-			headerMap.put(splitLine[0], splitLine[1]);
+			this.headerMap.put(splitLine[0], splitLine[1]);
 			
 			String scan;
 			while ((scan = in.nextLine()) != null) {
@@ -63,9 +67,46 @@ public class HTTPrequest {
 				}
 				
 				splitLine = scan.split(": ");
-				headerMap.put(splitLine[0], splitLine[1]);
+				this.headerMap.put(splitLine[0], splitLine[1]);
 			}
 		}
-		return headerMap;
 	}
+	
+	/**
+	 * returns the web socket key that was read from the HTTP request
+	 * 
+	 * @return the web socket key
+	 */
+	public String getWebSocketKey() {
+		return this.headerMap.get("Sec-WebSocket-Key");
+	}
+	
+	/**
+	 * returns the requested file from the HTTP GET request
+	 * 
+	 * @return the requested file
+	 */
+	public String getRequestedFilePath() {
+		return this.headerMap.get("GET");
+	}
+	
+	/**
+	 * returns true if the HTTP request is a WebSocket handshake request, false otherwise
+	 * assumes that if "Sec-WebSocket-Key" is in the HTTP header, it is a Websocket handshake request
+	 * 
+	 * @return 
+	 */
+	public boolean isWebSocketHandshakeRequest() {
+		return this.headerMap.containsKey("Sec-WebSocket-Key");
+	}
+	
+	/**
+	 * returns true if the HTTP request is a HTTP "GET" request, false otherwise
+	 * 
+	 * @return 
+	 */
+	public boolean isGetRequest() {
+		return this.headerMap.containsKey("GET");
+	}
+	
 }

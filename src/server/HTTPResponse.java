@@ -16,7 +16,8 @@ import java.util.*;
  * @author knownastron
  *
  */
-public class HTTPresponse {
+public class HTTPResponse {
+
 	
 	/**
 	 * Creates a HTTP response to a GET request
@@ -42,7 +43,7 @@ public class HTTPresponse {
 			response.append("HTTP/1.1 200 OK" + "\r\n");
 			response.append("Content-Length: " + file.length() + "\r\n");
 			response.append("\r\n");
-
+			
 			InputStream fileInput = new FileInputStream(pathToFile);
 			out.write(response.toString().getBytes());
 			out.write(fileInput.readAllBytes());

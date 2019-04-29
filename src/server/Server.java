@@ -37,12 +37,11 @@ public class Server {
 				SocketChannel clientSocket = acceptClient(server);
 				new Thread(()-> {
 					try {
-						HashMap<String, String> headerMap = HTTPrequest.parseHeader(clientSocket);
-						// assumes that if "Sec-WebSocket-Key" is in the header, it is a Websocket handshake request
-						if (headerMap.containsKey("Sec-WebSocket-Key")) {
-							
+						HTTPRequest currentHttpRequest = new HTTPRequest();
+						currentHttpRequest.parseMessageFromSocket(clientSocket);
+						if (currentHttpRequest.isWebSocketHandshakeRequest()) {
 							// Handshakes with client and opens WebSocket
-							HTTPresponse.handleHandshakeResponse(clientSocket, headerMap.get("Sec-WebSocket-Key"));
+							HTTPResponse.handleHandshakeResponse(clientSocket, currentHttpRequest.getWebSocketKey());
 							String message = ConnectedWebSocket.decodeMessage(clientSocket);
 							
 							// turns the message into a MessagePost for easy handling
@@ -54,10 +53,10 @@ public class Server {
 								System.out.println("command is not join");
 								clientSocket.close();
 							}
-						} else if (headerMap.containsKey("GET")) {
+						} else if (currentHttpRequest.isGetRequest()) {
 							// basic handling of HTTP get requests
-							String desiredFile = HTTPrequest.handleGetRequest(headerMap.get("GET"));
-							HTTPresponse.handleResponse(clientSocket, desiredFile);
+							String desiredFile = HTTPRequest.handleGetRequest(currentHttpRequest.getRequestedFilePath());
+							HTTPResponse.handleResponse(clientSocket, desiredFile);
 							clientSocket.close();
 						}
 					} catch (Exception e) {
