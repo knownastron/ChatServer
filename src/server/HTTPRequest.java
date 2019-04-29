@@ -103,7 +103,7 @@ public class HTTPRequest {
 	/**
 	 * returns true if the HTTP request is a HTTP "GET" request, false otherwise
 	 * 
-	 * @return 
+	 * @return  
 	 */
 	public boolean isGetRequest() {
 		return this.headerMap.containsKey("GET");

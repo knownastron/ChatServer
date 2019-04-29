@@ -36,7 +36,7 @@ public class Server {
 			while (true) {
 				SocketChannel clientSocket = acceptClient(server);
 				new Thread(()-> {
-					try {
+					try { 
 						HTTPRequest currentHttpRequest = new HTTPRequest();
 						currentHttpRequest.parseMessageFromSocket(clientSocket);
 						if (currentHttpRequest.isWebSocketHandshakeRequest()) {
